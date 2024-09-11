@@ -23,9 +23,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/register", "/api/login").permitAll() // Public endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // Only ADMIN role can access /api/admin/**
+                        .requestMatchers("/api/users").hasRole("ADMIN") // Only ADMIN role can access /api/users
                         .anyRequest().authenticated() // All other requests require authentication
-                );
-                //.httpBasic();
+                )
+                .httpBasic(); // Enable basic HTTP authentication for testing
         return http.build();
     }
 

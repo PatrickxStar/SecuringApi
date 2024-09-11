@@ -14,6 +14,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class AuthController {
@@ -33,7 +35,11 @@ public class AuthController {
         User user = new User();
         user.setUsername(registrationDto.getUsername());
         user.setPassword(registrationDto.getPassword());
+
+        // Set user role based on input
         user.setRole(Roles.valueOf(registrationDto.getRole().toUpperCase()));
+
+        // Save the user
         userService.saveUser(user);
 
         // Generate a JWT token after successful registration
@@ -58,5 +64,10 @@ public class AuthController {
         final String token = jwtTokenUtil.generateToken(userDetails);
 
         return ResponseEntity.ok(new RegistrationResponse("Login successful", token));
+    }
+
+    @GetMapping("/users")
+    public List<User> listUsers() {
+        return userService.findAllUsers();
     }
 }
